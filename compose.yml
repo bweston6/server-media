@@ -1,0 +1,109 @@
+networks:
+  server:
+    external: true
+services:
+  emby:
+    container_name: emby
+    image: emby/embyserver:latest
+    restart: always
+    environment:
+      - GID=${GID}
+      - GIDLIST=985,989 # video,render
+      - TZ=${TZ}
+      - UID=${UID}
+    volumes:
+      - ./emby:/config
+      - /mnt/shared/Media:/mnt/shared/Media
+    ports:
+      - 8096:8096
+    networks:
+      - server
+    devices:
+      - /dev/dri:/dev/dri
+  jellyseerr:
+    container_name: jellyseerr
+    image: fallenbagel/jellyseerr:latest      
+    restart: always
+    user: ${UID}:${GID}
+    ports:
+      - 5055:5055
+    networks:
+      - server
+    volumes:
+      - ./jellyseerr:/app/config
+    environment:
+      - JELLYFIN_TYPE=emby
+      - TZ=${TZ}
+  nzbget:
+    container_name: nzbget
+    image: mouton99/nzbget-ng:latest
+    restart: always
+    environment:
+      - PGID=${GID}
+      - PUID=${UID}
+      - TZ=${TZ}
+      - UMASK=002
+    volumes:
+      - ./nzbget:/config
+      - /mnt/downloads:/mnt/downloads
+      - /mnt/shared/Downloads:/mnt/shared/Downloads
+    ports:
+      - 6789:6789
+    networks:
+      - server
+  prowlarr:
+    container_name: prowlarr
+    image: cr.hotio.dev/hotio/prowlarr:latest
+    restart: always
+    environment:
+      - PGID=${GID}
+      - PUID=${UID}
+      - TZ=${TZ}
+    volumes:
+      - ./prowlarr:/config
+    ports:
+      - 9696:9696
+    networks:
+      - server
+  radarr:
+    container_name: radarr
+    image: cr.hotio.dev/hotio/radarr:nightly
+    restart: always
+    environment:
+      - PGID=${GID}
+      - PUID=${UID}
+      - TZ=${TZ}
+    volumes:
+      - ./radarr:/config
+      - /mnt/shared:/mnt/shared
+    ports:
+      - 7878:7878
+    networks:
+      - server
+  sonarr:
+    container_name: sonarr
+    image: cr.hotio.dev/hotio/sonarr:v4
+    restart: always
+    environment:
+      - PGID=${GID}
+      - PUID=${UID}
+      - TZ=${TZ}
+    volumes:
+      - ./sonarr:/config
+      - /mnt/shared:/mnt/shared
+    ports:
+      - 8989:8989
+    networks:
+      - server
+  wizarr:
+    container_name: wizarr
+    image: ghcr.io/wizarrrr/wizarr:latest
+    restart: always
+    ports:
+      - 5690:5690
+    networks:
+      - server
+    volumes:
+      - ./wizarr:/data/database
+    environment:
+      - TZ=${TZ}
