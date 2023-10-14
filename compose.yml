@@ -53,7 +53,7 @@ services:
       - server
   prowlarr:
     container_name: prowlarr
-    image: cr.hotio.dev/hotio/prowlarr:latest
+    image: ghcr.io/hotio/prowlarr:latest
     restart: always
     environment:
       - PGID=${GID}
@@ -67,7 +67,7 @@ services:
       - server
   radarr:
     container_name: radarr
-    image: cr.hotio.dev/hotio/radarr:nightly
+    image: ghcr.io/hotio/radarr:latest
     restart: always
     environment:
       - PGID=${GID}
@@ -82,7 +82,7 @@ services:
       - server
   sonarr:
     container_name: sonarr
-    image: cr.hotio.dev/hotio/sonarr:v4
+    image: ghcr.io/hotio/sonarr:v4
     restart: always
     environment:
       - PGID=${GID}
