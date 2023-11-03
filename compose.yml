@@ -82,7 +82,7 @@ services:
       - server
   sonarr:
     container_name: sonarr
-    image: ghcr.io/hotio/sonarr:v4
+    image: ghcr.io/hotio/sonarr:nightly
     restart: always
     environment:
       - PGID=${GID}
