@@ -16,10 +16,16 @@ services:
       - /mnt/shared/Media:/mnt/shared/Media
     ports:
       - 8096:8096
+      - 1900:1900
     networks:
       - server
-    devices:
-      - /dev/dri:/dev/dri
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
   jellyseerr:
     container_name: jellyseerr
     image: fallenbagel/jellyseerr:latest      
